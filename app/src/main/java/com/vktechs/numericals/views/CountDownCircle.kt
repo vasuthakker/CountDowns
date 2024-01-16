@@ -18,65 +18,71 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 
 
 @Composable
-fun CountDownGauge(
+fun CountDownCircle(
     modifier: Modifier = Modifier,
     countDown: Int,
-    isTextVisible: Boolean = true,
-    style: TextStyle = LocalTextStyle.current.copy(fontSize = 50.sp),
     brush: Brush? = null,
-    strokeWidth: Float = 5f,
+    strokeWidth: Float = 10f,
+    isTextVisible: Boolean = true,
+    delayDuration: Long = 1000,
+    style: TextStyle = LocalTextStyle.current.copy(fontSize = 50.sp),
     onEnd: () -> Unit
 ) {
-    CountDownGauge(
+    CountDownCircle(
         modifier = modifier,
         countDown = countDown,
         brush = brush,
         color = null,
-        isTextVisible = isTextVisible,
-        style = style,
         strokeWidth = strokeWidth,
+        isTextVisible = isTextVisible,
+        delayDuration = delayDuration,
+        style = style,
         onEnd = onEnd
     )
 }
 
 @Composable
-fun CountDownGauge(
+fun CountDownCircle(
     modifier: Modifier = Modifier,
     countDown: Int,
+    color: Color,
+    strokeWidth: Float = 10f,
     isTextVisible: Boolean = true,
+    delayDuration: Long = 1000,
     style: TextStyle = LocalTextStyle.current.copy(fontSize = 50.sp),
-    color: Color? = null,
-    strokeWidth: Float = 5f,
     onEnd: () -> Unit
 ) {
-    CountDownGauge(
+    CountDownCircle(
         modifier = modifier,
         countDown = countDown,
-        isTextVisible = isTextVisible,
-        style = style,
         color = color,
         brush = null,
         strokeWidth = strokeWidth,
+        isTextVisible = isTextVisible,
+        delayDuration = delayDuration,
+        style = style,
         onEnd = onEnd
     )
 }
 
-
 @Composable
-private fun CountDownGauge(
+private fun CountDownCircle(
     modifier: Modifier = Modifier,
     countDown: Int,
     brush: Brush? = null,
     color: Color? = null,
-    strokeWidth: Float = 5f,
-    style: TextStyle,
+    strokeWidth: Float = 10f,
     isTextVisible: Boolean = true,
+    delayDuration: Long = 1000,
+    style: TextStyle,
     onEnd: () -> Unit
 ) {
 
@@ -86,56 +92,64 @@ private fun CountDownGauge(
 
     LaunchedEffect(key1 = progress)
     {
+        delay(delayDuration)
         if (progress > 0) {
-            delay(1000L)
             progress--
         } else {
-            onEnd.invoke()
+            //secondValue = defaultValue
+            onEnd()
         }
     }
 
     val progressFloat = progress / countDown
 
     val progressValue by animateFloatAsState(
-        targetValue = progressFloat * 180,
-        label = "progress", animationSpec = tween(500)
+        targetValue = progressFloat * 360,
+        label = "progress", animationSpec = tween(1000)
     )
 
     Box(
-        modifier = modifier
-            .aspectRatio(2f, false)
+        modifier
+            .aspectRatio(1f)
             .drawWithCache {
                 onDrawBehind {
-                    if (brush != null) {
-                        drawArc(
-                            brush,
-                            sweepAngle = progressValue,
-                            startAngle = 180f,
-                            useCenter = false,
-                            size = size.copy(height = size.height * 2),
-                            style = Stroke(strokeWidth)
-                        )
-                    } else {
-                        drawArc(
-                            color ?: Color.Black,
-                            sweepAngle = progressValue,
-                            startAngle = 180f,
-                            useCenter = false,
-                            size = size.copy(height = size.height * 2),
-                            style = Stroke(strokeWidth)
-                        )
+                    scale(scaleX = -1f, scaleY = 1f)
+                    {
+                        if (brush != null) {
+                            drawArc(
+                                brush,
+                                startAngle = -90f,
+                                sweepAngle = progressValue,
+                                useCenter = false,
+                                style = Stroke(strokeWidth)
+                            )
+                        } else {
+                            drawArc(
+                                color ?: Color.Black,
+                                startAngle = -90f,
+                                sweepAngle = progressValue,
+                                useCenter = false,
+                                style = Stroke(strokeWidth)
+                            )
+                        }
                     }
                 }
-            },
-    ) {
+            }) {
         if (isTextVisible) {
             Text(
                 text = progress.toInt().toString(),
                 style = style,
-                modifier = Modifier.align(Alignment.BottomCenter)
+                modifier = Modifier.align(Alignment.Center)
             )
         }
     }
 
 }
 
+@Preview
+@Composable
+fun PreviewCicle() {
+    CountDownCircle(countDown = 100, style = TextStyle(fontSize = 50.sp)) {
+
+    }
+}
