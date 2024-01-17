@@ -1,4 +1,4 @@
-package com.vktechs.numericals
+package com.vktechs.countdowns
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -17,12 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.vktechs.numericals.ui.theme.NumericalsTheme
-import com.vktechs.numericals.views.CountDownBar
-import com.vktechs.numericals.views.CountDownCircle
-import com.vktechs.numericals.views.CountDownGauge
-import com.vktechs.numericals.views.CountDownTimer
-import com.vktechs.numericals.views.CountDownView
+import com.vktechs.countdowns.ui.theme.NumericalsTheme
+import com.vktechs.countdowns.views.CountDownBar
+import com.vktechs.countdowns.views.CountDownCircle
+import com.vktechs.countdowns.views.CountDownGauge
+import com.vktechs.countdowns.views.CountDownTimer
+import com.vktechs.countdowns.views.CountDownView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,28 +40,35 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .scrollable(scrollState, orientation = Orientation.Vertical),
                     ) {
-                        CountDownTimer(
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            seconds = 4030,
-                            style = TextStyle(fontSize = 70.sp)
+                        /* CountDownTimer(
+                             modifier = Modifier.align(Alignment.CenterHorizontally),
+                             seconds = 4030,
+                             style = TextStyle(fontSize = 70.sp)
+                         ) {}
+                         CountDownView(
+                             modifier = Modifier.align(Alignment.CenterHorizontally),
+                             countDown = 4030,
+                             style = TextStyle(fontSize = 70.sp)
+                         ) {}*/
+                        CountDownGauge(
+                            countDown = 20,
+                            color = Color.Black,
+                            strokeWidth = 20f,
+                            smoothAnimation = true
                         ) {}
-                        CountDownView(
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            countDown = 4030,
-                            style = TextStyle(fontSize = 70.sp)
-                        ) {}
-                        CountDownGauge(countDown = 50, color = Color.Black, strokeWidth = 20f) {}
 
                         CountDownBar(
                             modifier = Modifier.fillMaxWidth(),
-                            countDown = 50,
+                            countDown = 20,
                             trackColor = Color.Black,
-                            strokeWidth = 20.dp
+                            strokeWidth = 20.dp,
+                            smoothAnimation = true
                         ) {}
                         CountDownCircle(
                             strokeWidth = 20f,
-                            countDown = 10,
+                            countDown = 20,
                             style = TextStyle(fontSize = 40.sp),
+                            smoothAnimation = true,
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         ) {
 

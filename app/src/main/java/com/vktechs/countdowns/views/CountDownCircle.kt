@@ -1,5 +1,7 @@
-package com.vktechs.numericals.views
+package com.vktechs.countdowns.views
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
@@ -33,6 +35,7 @@ fun CountDownCircle(
     strokeWidth: Float = 10f,
     isTextVisible: Boolean = true,
     delayDuration: Long = 1000,
+    smoothAnimation: Boolean = false,
     style: TextStyle = LocalTextStyle.current.copy(fontSize = 50.sp),
     onEnd: () -> Unit
 ) {
@@ -44,6 +47,7 @@ fun CountDownCircle(
         strokeWidth = strokeWidth,
         isTextVisible = isTextVisible,
         delayDuration = delayDuration,
+        smoothAnimation = smoothAnimation,
         style = style,
         onEnd = onEnd
     )
@@ -57,6 +61,7 @@ fun CountDownCircle(
     strokeWidth: Float = 10f,
     isTextVisible: Boolean = true,
     delayDuration: Long = 1000,
+    smoothAnimation: Boolean = false,
     style: TextStyle = LocalTextStyle.current.copy(fontSize = 50.sp),
     onEnd: () -> Unit
 ) {
@@ -68,6 +73,7 @@ fun CountDownCircle(
         strokeWidth = strokeWidth,
         isTextVisible = isTextVisible,
         delayDuration = delayDuration,
+        smoothAnimation = smoothAnimation,
         style = style,
         onEnd = onEnd
     )
@@ -82,6 +88,7 @@ private fun CountDownCircle(
     strokeWidth: Float = 10f,
     isTextVisible: Boolean = true,
     delayDuration: Long = 1000,
+    smoothAnimation: Boolean ,
     style: TextStyle,
     onEnd: () -> Unit
 ) {
@@ -103,9 +110,21 @@ private fun CountDownCircle(
 
     val progressFloat = progress / countDown
 
+
+    val smoothAnimationValue = remember {
+        Animatable(360f)
+    }
+    LaunchedEffect(Unit) {
+        smoothAnimationValue.animateTo(
+            0f,
+            animationSpec = tween((delayDuration * (countDown + 1)).toInt(), easing = LinearEasing)
+        )
+    }
+
+
     val progressValue by animateFloatAsState(
         targetValue = progressFloat * 360,
-        label = "progress", animationSpec = tween(1000)
+        label = "progress", animationSpec = tween(delayDuration.toInt())
     )
 
     Box(
@@ -119,7 +138,7 @@ private fun CountDownCircle(
                             drawArc(
                                 brush,
                                 startAngle = -90f,
-                                sweepAngle = progressValue,
+                                sweepAngle = if (smoothAnimation) smoothAnimationValue.value else progressValue,
                                 useCenter = false,
                                 style = Stroke(strokeWidth)
                             )
@@ -127,7 +146,7 @@ private fun CountDownCircle(
                             drawArc(
                                 color ?: Color.Black,
                                 startAngle = -90f,
-                                sweepAngle = progressValue,
+                                sweepAngle = if (smoothAnimation) smoothAnimationValue.value else progressValue,
                                 useCenter = false,
                                 style = Stroke(strokeWidth)
                             )

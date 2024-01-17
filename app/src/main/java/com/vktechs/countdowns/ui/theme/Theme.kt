@@ -1,4 +1,4 @@
-package com.vktechs.numericals.ui.theme
+package com.vktechs.countdowns.ui.theme
 
 import android.app.Activity
 import android.os.Build

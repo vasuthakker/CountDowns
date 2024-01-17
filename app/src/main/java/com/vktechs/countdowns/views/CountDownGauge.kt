@@ -1,5 +1,7 @@
-package com.vktechs.numericals.views
+package com.vktechs.countdowns.views
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
@@ -27,7 +29,9 @@ import kotlinx.coroutines.delay
 fun CountDownGauge(
     modifier: Modifier = Modifier,
     countDown: Int,
+    delayDuration: Long = 1000L,
     isTextVisible: Boolean = true,
+    smoothAnimation: Boolean = false,
     style: TextStyle = LocalTextStyle.current.copy(fontSize = 50.sp),
     brush: Brush? = null,
     strokeWidth: Float = 5f,
@@ -39,7 +43,9 @@ fun CountDownGauge(
         brush = brush,
         color = null,
         isTextVisible = isTextVisible,
+        smoothAnimation = smoothAnimation,
         style = style,
+        delayDuration = delayDuration,
         strokeWidth = strokeWidth,
         onEnd = onEnd
     )
@@ -49,7 +55,9 @@ fun CountDownGauge(
 fun CountDownGauge(
     modifier: Modifier = Modifier,
     countDown: Int,
+    delayDuration: Long = 1000L,
     isTextVisible: Boolean = true,
+    smoothAnimation: Boolean = false,
     style: TextStyle = LocalTextStyle.current.copy(fontSize = 50.sp),
     color: Color? = null,
     strokeWidth: Float = 5f,
@@ -62,6 +70,8 @@ fun CountDownGauge(
         style = style,
         color = color,
         brush = null,
+        smoothAnimation = smoothAnimation,
+        delayDuration = delayDuration,
         strokeWidth = strokeWidth,
         onEnd = onEnd
     )
@@ -75,6 +85,8 @@ private fun CountDownGauge(
     brush: Brush? = null,
     color: Color? = null,
     strokeWidth: Float = 5f,
+    delayDuration: Long,
+    smoothAnimation: Boolean,
     style: TextStyle,
     isTextVisible: Boolean = true,
     onEnd: () -> Unit
@@ -87,7 +99,7 @@ private fun CountDownGauge(
     LaunchedEffect(key1 = progress)
     {
         if (progress > 0) {
-            delay(1000L)
+            delay(delayDuration)
             progress--
         } else {
             onEnd.invoke()
@@ -101,6 +113,16 @@ private fun CountDownGauge(
         label = "progress", animationSpec = tween(500)
     )
 
+    val smoothAnimationValue = remember {
+        Animatable(180f)
+    }
+    LaunchedEffect(Unit) {
+        smoothAnimationValue.animateTo(
+            0f,
+            animationSpec = tween((delayDuration * (countDown + 1)).toInt(), easing = LinearEasing)
+        )
+    }
+
     Box(
         modifier = modifier
             .aspectRatio(2f, false)
@@ -109,7 +131,7 @@ private fun CountDownGauge(
                     if (brush != null) {
                         drawArc(
                             brush,
-                            sweepAngle = progressValue,
+                            sweepAngle = if (smoothAnimation) smoothAnimationValue.value else progressValue,
                             startAngle = 180f,
                             useCenter = false,
                             size = size.copy(height = size.height * 2),
@@ -118,7 +140,7 @@ private fun CountDownGauge(
                     } else {
                         drawArc(
                             color ?: Color.Black,
-                            sweepAngle = progressValue,
+                            sweepAngle = if (smoothAnimation) smoothAnimationValue.value else progressValue,
                             startAngle = 180f,
                             useCenter = false,
                             size = size.copy(height = size.height * 2),

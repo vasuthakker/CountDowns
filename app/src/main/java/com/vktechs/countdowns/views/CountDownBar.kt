@@ -1,7 +1,9 @@
-package com.vktechs.numericals.views
+package com.vktechs.countdowns.views
 
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.height
@@ -24,6 +26,8 @@ fun CountDownBar(
     modifier: Modifier = Modifier,
     countDown: Int,
     trackColor: Color,
+    delayDuration: Long = 1000L,
+    smoothAnimation: Boolean = false,
     strokeWidth: Dp = 10.dp,
     strokeCap: StrokeCap = StrokeCap.Butt,
     onEnd: () -> Unit
@@ -36,7 +40,7 @@ fun CountDownBar(
     LaunchedEffect(key1 = progress)
     {
         if (progress > 0) {
-            delay(1000L)
+            delay(delayDuration)
             progress--
         } else {
             onEnd.invoke()
@@ -48,23 +52,33 @@ fun CountDownBar(
 
     val progressValue by animateFloatAsState(
         targetValue = progressFloat,
-        label = "progress", animationSpec = tween(500)
+        label = "progress", animationSpec = tween(delayDuration.toInt())
     )
 
-    Log.v("progress", "$progressValue $progressFloat")
+
+    val smoothAnimationValue = remember {
+        Animatable(1f)
+    }
+    LaunchedEffect(Unit) {
+        smoothAnimationValue.animateTo(
+            0f,
+            animationSpec = tween((delayDuration * (countDown + 1)).toInt(), easing = LinearEasing)
+        )
+    }
+
 
     val progressColor by animateColorAsState(
         targetValue = when {
-            progressFloat < 0.1f -> Color.Red
-            progressFloat < 0.55f -> Color.Yellow
-            progressFloat > 0.55f -> Color.Green
+            progressFloat < 0.1f || smoothAnimationValue.value < 0.1f -> Color.Red
+            progressFloat < 0.55f || smoothAnimationValue.value < 0.55f -> Color.Yellow
+            progressFloat > 0.55f || smoothAnimationValue.value > 0.55f -> Color.Green
             else -> Color.Red
         },
         label = "color"
     )
 
     LinearProgressIndicator(
-        progress = progressValue,
+        progress = if (smoothAnimation) smoothAnimationValue.value else progressValue,
         modifier = modifier.height(strokeWidth),
         trackColor = trackColor,
         color = progressColor,
