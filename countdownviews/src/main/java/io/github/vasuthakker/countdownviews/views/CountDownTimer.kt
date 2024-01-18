@@ -1,4 +1,4 @@
-package com.vktechs.countdowns.views
+package io.github.vasuthakker.countdownviews.views
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.slideInVertically

@@ -18,11 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vktechs.countdowns.ui.theme.NumericalsTheme
-import com.vktechs.countdowns.views.CountDownBar
-import com.vktechs.countdowns.views.CountDownCircle
-import com.vktechs.countdowns.views.CountDownGauge
-import com.vktechs.countdowns.views.CountDownTimer
-import com.vktechs.countdowns.views.CountDownView
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
