@@ -48,11 +48,11 @@ afterEvaluate {
 //                artifact javaSourcesJar
 
                 groupId 'io.github.vasuthakker'
-                version '1.0.0-SNAPSHOT'
+                version '1.0.1'
                 pom {
                     name = artifactId
                     description = POM_DESCRIPTION
-                    url = ''
+                    url = POM_URL
                     licenses {
                         license {
                             name = 'Apache-2.0 license'
