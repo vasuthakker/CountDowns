@@ -1,4 +1,4 @@
-package com.vktechs.numericals.views
+package io.github.vasuthakker.countdownviews.views
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.slideInVertically
@@ -16,25 +16,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import kotlinx.coroutines.delay
+import java.util.Locale
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun CountDownView(
+fun CountDownTimer(
     modifier: Modifier = Modifier,
-    countDown: Int,
+    seconds: Int,
     delayDuration: Long = 1000,
     style: TextStyle = LocalTextStyle.current,
+    addLeadingZero: Boolean = true,
     onEnd: () -> Unit
 ) {
 
-    var numericValue by remember {
-        mutableIntStateOf(countDown)
+    var totalSeconds by remember {
+        mutableIntStateOf(seconds)
     }
 
-    LaunchedEffect(key1 = numericValue)
+    LaunchedEffect(key1 = totalSeconds)
     {
         delay(delayDuration)
-        if (numericValue > 0) {
-            numericValue--
+        if (totalSeconds > 0) {
+            totalSeconds--
         } else {
             //secondValue = defaultValue
             onEnd()
@@ -43,8 +46,8 @@ fun CountDownView(
 
     Row(modifier) {
 
-        val initials = countDown.toString()
-        val newValue = numericValue.toString()
+        val initials = seconds.formatTime(addLeadingZero)
+        val newValue = totalSeconds.formatTime(addLeadingZero)
 
         for (i in initials.indices) {
             val oldChar = initials.getOrNull(i)
@@ -67,4 +70,20 @@ fun CountDownView(
 
         }
     }
+}
+
+private fun Int.formatTime(addLeadingZero: Boolean): String {
+    this.seconds.toComponents { hours, minutes, seconds, _ ->
+        return String.format(
+            Locale.getDefault(),
+            if (addLeadingZero) "%02d:%02d:%02d" else "%d:%d:%d",
+            hours,
+            minutes,
+            seconds,
+        )
+    }
+}
+
+private fun Int.addLeadingZero(required: Boolean = true): String {
+    return if (required) String.format("%02d", (this)) else this.toString()
 }
