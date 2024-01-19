@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .scrollable(scrollState, orientation = Orientation.Vertical),
                     ) {
-                        /* CountDownTimer(
+                   /*     *//* CountDownTimer(
                              modifier = Modifier.align(Alignment.CenterHorizontally),
                              seconds = 4030,
                              style = TextStyle(fontSize = 70.sp)
@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
                              modifier = Modifier.align(Alignment.CenterHorizontally),
                              countDown = 4030,
                              style = TextStyle(fontSize = 70.sp)
-                         ) {}*/
+                         ) {}*//*
                         CountDownGauge(
                             countDown = 20,
                             color = Color.Black,
@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         ) {
 
-                        }
+                        }*/
                     }
                 }
             }
