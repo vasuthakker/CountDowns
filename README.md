@@ -40,7 +40,7 @@ Next, add the library dependency. Use the latest version number indicated by the
 Add the following dependency to your app-level build.gradle file:
 ```gradle
 dependencies {
-    implementation 'io.github.vasuthakker:countdownviews:1.0.0' // Replace with the latest version
+    implementation 'io.github.vasuthakker:countdownviews:1.0.1' // Replace with the latest version
 }
 ```
 
