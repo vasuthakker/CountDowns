@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import io.github.vasuthakker.countdownviews.enum.CountDownType
 import kotlinx.coroutines.delay
 
 
@@ -37,9 +38,11 @@ fun CountDownCircle(
     delayDuration: Long = 1000,
     smoothAnimation: Boolean = false,
     style: TextStyle = LocalTextStyle.current.copy(fontSize = 50.sp),
+    countDownType: CountDownType = CountDownType.SIMPLE_TEXT,
+    alignment: Alignment = Alignment.Center,
     onEnd: () -> Unit
 ) {
-    CountDownCircle(
+    CountDownCircleInternal(
         modifier = modifier,
         countDown = countDown,
         brush = brush,
@@ -48,7 +51,9 @@ fun CountDownCircle(
         isTextVisible = isTextVisible,
         delayDuration = delayDuration,
         smoothAnimation = smoothAnimation,
+        countDownType = countDownType,
         style = style,
+        alignment = alignment,
         onEnd = onEnd
     )
 }
@@ -63,9 +68,11 @@ fun CountDownCircle(
     delayDuration: Long = 1000,
     smoothAnimation: Boolean = false,
     style: TextStyle = LocalTextStyle.current.copy(fontSize = 50.sp),
+    countDownType: CountDownType = CountDownType.SIMPLE_TEXT,
+    alignment: Alignment = Alignment.Center,
     onEnd: () -> Unit
 ) {
-    CountDownCircle(
+    CountDownCircleInternal(
         modifier = modifier,
         countDown = countDown,
         color = color,
@@ -74,13 +81,15 @@ fun CountDownCircle(
         isTextVisible = isTextVisible,
         delayDuration = delayDuration,
         smoothAnimation = smoothAnimation,
+        countDownType = countDownType,
         style = style,
+        alignment = alignment,
         onEnd = onEnd
     )
 }
 
 @Composable
-private fun CountDownCircle(
+private fun CountDownCircleInternal(
     modifier: Modifier = Modifier,
     countDown: Int,
     brush: Brush? = null,
@@ -88,8 +97,10 @@ private fun CountDownCircle(
     strokeWidth: Float = 10f,
     isTextVisible: Boolean = true,
     delayDuration: Long = 1000,
-    smoothAnimation: Boolean ,
+    smoothAnimation: Boolean,
     style: TextStyle,
+    countDownType: CountDownType,
+    alignment: Alignment,
     onEnd: () -> Unit
 ) {
 
@@ -155,20 +166,29 @@ private fun CountDownCircle(
                 }
             }) {
         if (isTextVisible) {
-            Text(
-                text = progress.toInt().toString(),
-                style = style,
-                modifier = Modifier.align(Alignment.Center)
-            )
+            when (countDownType) {
+                CountDownType.SIMPLE_TEXT -> {
+                    Text(
+                        text = progress.toInt().toString(),
+                        style = style,
+                        modifier = Modifier.align(alignment)
+                    )
+                }
+
+                CountDownType.COUNTDOWN_TEXT -> {
+                    CountDownView(
+                        Modifier.align(alignment),
+                        countDown = progress.toInt(),
+                        delayDuration = delayDuration,
+                        style = style,
+                    ) {
+                        // Not required
+                    }
+                }
+            }
+
         }
     }
 
 }
 
-@Preview
-@Composable
-fun PreviewCicle() {
-    CountDownCircle(countDown = 100, style = TextStyle(fontSize = 50.sp)) {
-
-    }
-}

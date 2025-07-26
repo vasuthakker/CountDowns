@@ -21,7 +21,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import io.github.vasuthakker.countdownviews.enum.CountDownType
 import kotlinx.coroutines.delay
 
 
@@ -35,9 +37,11 @@ fun CountDownGauge(
     style: TextStyle = LocalTextStyle.current.copy(fontSize = 50.sp),
     brush: Brush? = null,
     strokeWidth: Float = 5f,
+    countDownType: CountDownType = CountDownType.SIMPLE_TEXT,
+    alignment: Alignment = Alignment.Center,
     onEnd: () -> Unit
 ) {
-    CountDownGauge(
+    CountDownGaugeInternal(
         modifier = modifier,
         countDown = countDown,
         brush = brush,
@@ -47,6 +51,8 @@ fun CountDownGauge(
         style = style,
         delayDuration = delayDuration,
         strokeWidth = strokeWidth,
+        countDownType = countDownType,
+        alignment = alignment,
         onEnd = onEnd
     )
 }
@@ -61,9 +67,12 @@ fun CountDownGauge(
     style: TextStyle = LocalTextStyle.current.copy(fontSize = 50.sp),
     color: Color? = null,
     strokeWidth: Float = 5f,
+    countDownType: CountDownType = CountDownType.SIMPLE_TEXT,
+    textAlign: TextAlign = TextAlign.Center,
+    alignment: Alignment = Alignment.Center,
     onEnd: () -> Unit
 ) {
-    CountDownGauge(
+    CountDownGaugeInternal(
         modifier = modifier,
         countDown = countDown,
         isTextVisible = isTextVisible,
@@ -73,13 +82,15 @@ fun CountDownGauge(
         smoothAnimation = smoothAnimation,
         delayDuration = delayDuration,
         strokeWidth = strokeWidth,
+        countDownType = countDownType,
+        alignment = alignment,
         onEnd = onEnd
     )
 }
 
 
 @Composable
-private fun CountDownGauge(
+private fun CountDownGaugeInternal(
     modifier: Modifier = Modifier,
     countDown: Int,
     brush: Brush? = null,
@@ -88,7 +99,9 @@ private fun CountDownGauge(
     delayDuration: Long,
     smoothAnimation: Boolean,
     style: TextStyle,
-    isTextVisible: Boolean = true,
+    isTextVisible: Boolean,
+    countDownType: CountDownType,
+    alignment: Alignment,
     onEnd: () -> Unit
 ) {
 
@@ -151,13 +164,31 @@ private fun CountDownGauge(
             },
     ) {
         if (isTextVisible) {
-            Text(
-                text = progress.toInt().toString(),
-                style = style,
-                modifier = Modifier.align(Alignment.BottomCenter)
-            )
+            when (countDownType) {
+                CountDownType.SIMPLE_TEXT -> {
+                    Text(
+                        text = progress.toInt().toString(),
+                        style = style,
+                        modifier = Modifier.align(alignment)
+                    )
+                }
+
+                CountDownType.COUNTDOWN_TEXT -> {
+                    CountDownView(
+                        modifier.align(alignment),
+                        countDown = progress.toInt(),
+                        delayDuration = delayDuration,
+                        style = style,
+                    ) {
+                        // Not required
+                    }
+                }
+            }
+
         }
     }
 
 }
+
+
 

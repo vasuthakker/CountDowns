@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Numericals</string>
+    <string name="countdown_timer">Countdown timer</string>
+    <string name="countdown_view">Countdown view</string>
+    <string name="countdown_gauge">Countdown gauge</string>
+    <string name="countdown_bar_colors">Countdown bar</string>
+    <string name="countdown_bar_brush">Countdown bar with gradient</string>
+    <string name="countdown_circle">Countdown circle</string>
 </resources>
